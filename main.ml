@@ -17,39 +17,39 @@ let i x y =
   x := -0.15 *. !x +. 0.28 *. !y;
   y := -0.26 *. !x +. 0.24 *. !y +. 0.44
 
-let next x y =
-  let () = Random.self_init () in
-  let r = Random.int 4 in
-  match r with
-    | 0 -> f x y
-    | 1 -> g x y
-    | 2 -> h x y
-    | 3 -> i x y
-
 let m x a b c d =
   let slope = (d -. c) /. (b -. a) in
   x *. slope +. c
 
-let t = m 5. 0. 10. (-1.0) 1.
+let rec next x y =
+  let () = Random.self_init () in
+  let r = Random.int 4 in
+  if r == 0 then 
+    f x y
+  else if r == 1 then
+    g x y
+  else if r == 2 then
+    h x y
+  else if r == 3 then
+    i x y;
+  let px = m !x (-2.18) 2.65 0. 800. in
+  let py = m !y 0. 9.99 0. 800. in
+  let fx = (int_of_float px) + size_x () /2 in
+  let fy = (int_of_float py) in
+  fill_circle fx fy 2;
+  next x y
 
-let () = print_float t
 
 let _ =
-  open_graph " 400x400";
+  open_graph " 800x800";
   set_color black;
-  fill_rect 0 0 400 400;
+  fill_rect 0 0 800 800;
   set_color white;
 
   let px = ref 0. in
   let py = ref 0. in
   
-  for j = 0 to 1000 do
-    next px py;
-    let x = m !px (-2.18) 2.65 0. 400. in
-    let y = m !py 0. 9.99 0. 400. in
-    (* print_float !px; print_endline ""; *)
-    (* print_float !py; print_endline ""; *)
-    fill_circle (int_of_float x) (int_of_float y) 2
-  done;
-  
+  next px py;
+    
+  print_endline "done";
   read_line ()
