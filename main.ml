@@ -21,10 +21,18 @@ let next x y =
   let () = Random.self_init () in
   let r = Random.int 4 in
   match r with
-    | 0 -> f x y; print_int 0
-    | 1 -> g x y; print_int 1
-    | 2 -> h x y; print_int 2
-    | 3 -> i x y; print_int 3
+    | 0 -> f x y
+    | 1 -> g x y
+    | 2 -> h x y
+    | 3 -> i x y
+
+let m x a b c d =
+  let slope = (d -. c) /. (b -. a) in
+  x *. slope +. c
+
+let t = m 5. 0. 10. (-1.0) 1.
+
+let () = print_float t
 
 let _ =
   open_graph " 400x400";
@@ -37,9 +45,11 @@ let _ =
   
   for j = 0 to 1000 do
     next px py;
-    (* print_float !px; print_newline (); *)
-    (* print_float !py; print_newline (); *)
-    fill_circle (int_of_float !px) (int_of_float !py) 2;
+    let x = m !px (-2.18) 2.65 0. 400. in
+    let y = m !py 0. 9.99 0. 400. in
+    (* print_float !px; print_endline ""; *)
+    (* print_float !py; print_endline ""; *)
+    fill_circle (int_of_float x) (int_of_float y) 2
   done;
   
   read_line ()
