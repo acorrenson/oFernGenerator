@@ -1,44 +1,59 @@
 
+(* open graphics lib *)
 open Graphics
 
+(* transformation 1 *)
 let f x y =
+  let py = !y in
   x := 0.;
-  y := 0.16 *. !y
+  y := 0.16 *. py
 
+(* transformation 2 *)
 let g x y =
-  x := 0.85 *. !x +. 0.04 *. !y;
-  y := -0.0 *. !x +. 0.85 *. !y +. 1.6 
+  let px = !x in
+  let py = !y in
+  x := 0.85 *. px +. 0.04 *. py;
+  y := -0.04 *. px +. 0.85 *. py +. 1.6
 
+(* transformation 3 *)
 let h x y =
-  x := 0.2 *. !x -. 0.26 *. !y;
-  y := 0.23 *. !x +. 0.22 *. !y +. 1.6
+  let px = !x in
+  let py = !y in
+  x := 0.2 *. px -. 0.26 *. py;
+  y := 0.23 *. px +. 0.22 *. py +. 1.6
 
+(* transformation 4 *)
 let i x y =
-  x := -0.15 *. !x +. 0.28 *. !y;
-  y := -0.26 *. !x +. 0.24 *. !y +. 0.44
+  let px = !x in
+  let py = !y in
+  x := -0.15 *. px +. 0.28 *. py;
+  y := 0.26 *. px +. 0.24 *. py +. 0.44
 
-let m x a b c d =
+(* map a value from a range to an other *)
+let map x a b c d =
   let slope = (d -. c) /. (b -. a) in
   x *. slope +. c
 
+(* get next point *)
 let rec next x y =
   let () = Random.self_init () in
-  let r = Random.int 4 in
-  if r == 0 then 
+  let r = Random.float 1. in
+  
+  if r < 0.01 then
     f x y
-  else if r == 1 then
+  else if r < 0.85 then
     g x y
-  else if r == 2 then
+  else if r < 0.93 then
     h x y
-  else if r == 3 then
+  else
     i x y;
-  let px = m !x (-2.18) 2.65 0. 800. in
-  let py = m !y 0. 9.99 0. 800. in
-  let fx = (int_of_float px) + size_x () /2 in
-  let fy = (int_of_float py) in
+
+  let mx = map !x (-2.18) 2.65 0. 800. in
+  let my = map !y 0. 9.99 0. 800. in
+  let fx = (int_of_float mx) + size_x () / 2 in
+  let fy = (int_of_float my) in
   fill_circle fx fy 2;
   next x y
-
 
 let _ =
   open_graph " 800x800";
