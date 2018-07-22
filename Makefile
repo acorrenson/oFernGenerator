@@ -1,9 +1,9 @@
 
-fern.exe:
-	ocamlc graphics.cma main.ml -o fern.exe
+fern:
+	ocamlc graphics.cma main.ml -o fern
 
 clean: clean_src
-	rm -rf *.exe
+	rm -rf fern
 
 clean_src:
 	rm -rf *.cmo *.cmi
